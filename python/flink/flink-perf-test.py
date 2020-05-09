@@ -49,8 +49,9 @@ def main():
         return x + 1
 
     t_env.register_function("inc", inc)
+    t_env.register_java_function("java_inc", "com.alibaba.flink.function.JavaInc")
 
-    num_rows = 1000000000
+    num_rows = 100000000
     t_env.from_table_source(RangeTableSource(1, num_rows, 1)).alias("id") \
         .select("inc(id)") \
         .insert_into("sink")

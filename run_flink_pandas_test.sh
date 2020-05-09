@@ -16,14 +16,16 @@
 CURRENT_DIR="$(cd "$( dirname "$0" )" && pwd)"
 
 # compile java code
+new_compile=0
 if [[ ! -f ${CURRENT_DIR}/java/target/flink-perf-tests-0.1.jar ]]; then
     pushd ${CURRENT_DIR}/java
     mvn clean install
     popd
+    new_compile=1
 fi
 
 LIB_DIR=`python -c "import pyflink;import os;print(os.path.dirname(os.path.abspath(pyflink.__file__))+'/lib')"`
-if [[ ! -f ${LIB_DIR}/flink-perf-tests-0.1.jar ]]; then
+if [[ ! -f ${LIB_DIR}/flink-perf-tests-0.1.jar || ${new_compile} -eq 1 ]]; then
     # copy the jar file to the path site-packages/pyflink/lib of the used Python interpreter.
     cp ${CURRENT_DIR}/java/target/flink-perf-tests-0.1.jar ${LIB_DIR}
     ls -al ${LIB_DIR}
